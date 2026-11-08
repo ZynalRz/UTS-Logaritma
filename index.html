@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UTS Logika & Algoritma — 50 Soal Interaktif</title>
+<style>
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --text:#171a1f; --muted:#657084;
+    --border:#e3e7ee; --primary:#2f6fed; --primary-soft:#e8f0fe;
+    --ok:#128a4f; --ok-soft:#e2f6ec; --err:#cf3030; --err-soft:#fdeaea;
+    --warn:#a76d00; --warn-soft:#fdf3dd; --radius:14px;
+    --shadow:0 1px 2px rgba(16,24,40,.05), 0 8px 24px rgba(16,24,40,.05);
+  }
+  [data-theme="dark"]{
+    --bg:#101318; --card:#181d24; --text:#e7eaef; --muted:#93a0b3;
+    --border:#28313c; --primary:#6b9bff; --primary-soft:#1b2a44;
+    --ok:#3ddc97; --ok-soft:#122e1f; --err:#ff7070; --err-soft:#381818;
+    --warn:#f0b429; --warn-soft:#322811; --shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text); line-height:1.6;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:18px 16px 64px}
+
+  /* ---------- Top bar ---------- */
+  .topbar{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+  .brand h1{margin:0;font-size:1.35rem;letter-spacing:-.02em}
+  .brand p{margin:2px 0 0;color:var(--muted);font-size:.85rem}
+  .topactions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .modeswitch{display:flex;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:3px;box-shadow:var(--shadow)}
+  .modeswitch button{
+    border:0;background:transparent;color:var(--muted);font:inherit;font-size:.86rem;font-weight:600;
+    padding:7px 16px;border-radius:8px;cursor:pointer;transition:.15s;
+  }
+  .modeswitch button.active{background:var(--primary);color:#fff}
+  .iconbtn{
+    width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--card);
+    color:var(--text);font-size:1rem;cursor:pointer;box-shadow:var(--shadow);transition:.15s;
+  }
+  .iconbtn:hover{border-color:var(--primary)}
+
+  /* ---------- Stats ---------- */
+  .statsbar{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:14px 16px 10px;box-shadow:var(--shadow);margin-bottom:14px;
+  }
+  .statsrow{display:flex;flex-wrap:wrap;gap:22px;margin-bottom:10px}
+  .stat{display:flex;flex-direction:column;min-width:64px}
+  .stat span{font-size:1.15rem;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .stat small{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .stat.ok span{color:var(--ok)} .stat.err span{color:var(--err)}
+  .progress{height:7px;background:var(--border);border-radius:99px;overflow:hidden}
+  #progressFill{height:100%;width:0;background:var(--primary);border-radius:99px;transition:width .25s}
+
+  /* ---------- Filters ---------- */
+  .filters{
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px;
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:12px 16px;box-shadow:var(--shadow);
+  }
+  .filters label{display:flex;align-items:center;gap:7px;font-size:.82rem;color:var(--muted);font-weight:600}
+  .filters select{
+    font:inherit;font-size:.84rem;padding:6px 10px;border-radius:8px;
+    border:1px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;
+  }
+  .filterinfo{margin-left:auto;font-size:.78rem;color:var(--muted)}
+
+  /* ---------- Layout ---------- */
+  .layout{display:grid;grid-template-columns:1fr;gap:16px}
+  @media(min-width:900px){ .layout{grid-template-columns:1fr 286px} }
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+  /* ---------- Question card ---------- */
+  #qcard{padding:22px 22px 20px}
+  .qmeta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+  .chip{
+    font-size:.71rem;font-weight:700;letter-spacing:.03em;padding:4px 10px;border-radius:99px;
+    background:var(--primary-soft);color:var(--primary);white-space:nowrap;
+  }
+  .chip.bloom{background:var(--warn-soft);color:var(--warn)}
+  .chip.num{background:transparent;color:var(--muted);border:1px solid var(--border)}
+  .qtext{margin:0 0 14px;font-size:1.03rem;font-weight:600;line-height:1.55}
+  pre.code{
+    background:var(--bg);border:1px solid var(--border);border-radius:10px;
+    padding:13px 15px;overflow-x:auto;font-size:.86rem;line-height:1.55;margin:0 0 16px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text);
+  }
+  .options{display:flex;flex-direction:column;gap:9px}
+  .opt{
+    display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;
+    font:inherit;font-size:.94rem;color:var(--text);
+    background:var(--bg);border:1.5px solid var(--border);border-radius:11px;
+    padding:11px 14px;cursor:pointer;transition:.14s;
+  }
+  .opt:hover:not(:disabled){border-color:var(--primary);background:var(--primary-soft)}
+  .opt:disabled{cursor:default}
+  .letter{
+    flex:0 0 24px;height:24px;border-radius:7px;display:grid;place-items:center;
+    background:var(--card);border:1px solid var(--border);
+    font-size:.76rem;font-weight:800;color:var(--muted);
+  }
+  .otext{flex:1;min-width:0;word-break:break-word;font-family:inherit}
+  .opt.selected{border-color:var(--primary);background:var(--primary-soft)}
+  .opt.selected .letter{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.correct .letter{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .opt.wrong{border-color:var(--err);background:var(--err-soft)}
+  .opt.wrong .letter{background:var(--err);color:#fff;border-color:var(--err)}
+
+  .feedback{margin-top:18px;border-top:1px dashed var(--border);padding-top:16px}
+  .verdict{display:flex;align-items:center;gap:9px;font-weight:700;font-size:.92rem;margin-bottom:10px}
+  .verdict.ok{color:var(--ok)} .verdict.err{color:var(--err)}
+  .fbrow{font-size:.88rem;margin-bottom:9px}
+  .fbrow b{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px}
+  .fbrow .val{color:var(--text)}
+  .reftag{
+    display:inline-block;font-size:.78rem;padding:3px 9px;border-radius:7px;
+    background:var(--bg);border:1px solid var(--border);color:var(--muted);
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+  }
+
+  /* ---------- Actions ---------- */
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .btn{
+    font:inherit;font-size:.89rem;font-weight:600;padding:10px 18px;border-radius:10px;
+    border:1px solid var(--border);background:var(--card);color:var(--text);
+    cursor:pointer;transition:.14s;box-shadow:var(--shadow);
+  }
+  .btn:hover:not(:disabled){border-color:var(--primary);color:var(--primary)}
+  .btn:disabled{opacity:.42;cursor:not-allowed}
+  .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+  .btn.primary:hover:not(:disabled){filter:brightness(1.08);color:#fff}
+  .btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+  .btn.ghost{box-shadow:none;background:transparent}
+  .spacer{flex:1}
+
+  /* ---------- Sidebar / nav ---------- */
+  .sidebar{display:flex;flex-direction:column;gap:16px}
+  .navcard{padding:16px}
+  .navhead{font-size:.73rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:11px}
+  .navgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:6px}
+  .navgrid button{
+    aspect-ratio:1;border-radius:8px;border:1.5px solid var(--border);
+    background:var(--bg);color:var(--muted);font:inherit;font-size:.76rem;font-weight:700;
+    cursor:pointer;transition:.13s;padding:0;
+  }
+  .navgrid button:hover:not(:disabled){border-color:var(--primary);color:var(--primary)}
+  .navgrid button.answered{background:var(--primary-soft);border-color:var(--primary);color:var(--primary)}
+  .navgrid button.correct{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .navgrid button.wrong{background:var(--err-soft);border-color:var(--err);color:var(--err)}
+  .navgrid button.current{outline:2.5px solid var(--primary);outline-offset:1.5px}
+  .navgrid button.dim{opacity:.22;cursor:not-allowed}
+  .legend{margin-top:13px;display:flex;flex-wrap:wrap;gap:9px;font-size:.71rem;color:var(--muted)}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;vertical-align:middle}
+  .legend .l-ok{background:var(--ok)} .legend .l-err{background:var(--err)}
+  .legend .l-ans{background:var(--primary)} .legend .l-empty{background:var(--border)}
+
+  /* ---------- Results ---------- */
+  .results{margin-top:18px;padding:24px 22px}
+  .results h2{margin:0 0 4px;font-size:1.15rem}
+  .bigscore{font-size:3rem;font-weight:800;letter-spacing:-.03em;line-height:1.1;margin:12px 0 2px;font-variant-numeric:tabular-nums}
+  .bigscore span{font-size:1.15rem;color:var(--muted);font-weight:600}
+  .ressum{color:var(--muted);font-size:.88rem;margin:0 0 20px}
+  .grid2{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:20px}
+  @media(min-width:720px){ .grid2{grid-template-columns:1fr 1fr} }
+  .panel{border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+  .panel h3{margin:0 0 10px;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:.83rem}
+  th,td{padding:6px 4px;text-align:left;border-bottom:1px solid var(--border)}
+  th{font-size:.71rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:0}
+  .wrongitem{border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:9px}
+  .wrongitem summary{cursor:pointer;font-size:.88rem;font-weight:600;list-style:none}
+  .wrongitem summary::-webkit-details-marker{display:none}
+  .wrongitem summary::before{content:"▸ ";color:var(--muted)}
+  .wrongitem[open] summary::before{content:"▾ "}
+  .wrongbody{margin-top:11px;font-size:.86rem;display:flex;flex-direction:column;gap:8px}
+  .wrongbody .fbrow{margin:0}
+  .hidden{display:none !important}
+  .empty-note{color:var(--muted);font-size:.86rem;font-style:italic}
+  .kbdhint{margin-top:14px;font-size:.75rem;color:var(--muted);line-height:1.9}
+  kbd{
+    background:var(--bg);border:1px solid var(--border);border-bottom-width:2px;
+    border-radius:5px;padding:1px 6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.72rem;
+  }
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="brand">
+      <h1>UTS Logika &amp; Algoritma</h1>
+      <p>50 soal pilihan ganda &middot; Topik 1&ndash;6 &middot; Latihan &amp; Ujian</p>
+    </div>
+    <div class="topactions">
+      <div class="modeswitch" role="tablist" aria-label="Mode">
+        <button id="modeLatihan" role="tab">Latihan</button>
+        <button id="modeUjian" role="tab">Ujian</button>
+      </div>
+      <button class="iconbtn" id="themeBtn" title="Ganti tema terang/gelap" aria-label="Ganti tema">🌙</button>
+      <button class="iconbtn" id="resetBtn" title="Reset semua jawaban" aria-label="Reset">↺</button>
+    </div>
+  </header>
+
+  <section class="statsbar" aria-label="Statistik">
+    <div class="statsrow">
+      <div class="stat"><span id="statAnswered">0</span><small>terjawab</small></div>
+      <div class="stat ok"><span id="statCorrect">0</span><small>benar</small></div>
+      <div class="stat err"><span id="statWrong">0</span><small>salah</small></div>
+      <div class="stat"><span id="statScore">0</span><small>skor /100</small></div>
+      <div class="stat"><span id="statTimer">00:00</span><small>waktu</small></div>
+    </div>
+    <div class="progress"><div id="progressFill"></div></div>
+  </section>
+
+  <section class="filters" aria-label="Filter">
+    <label>Topik <select id="fTopik"></select></label>
+    <label>Level Bloom <select id="fBloom"></select></label>
+    <label>Status <select id="fStatus">
+      <option value="all">Semua</option>
+      <option value="empty">Belum dijawab</option>
+      <option value="answered">Sudah dijawab</option>
+      <option value="correct">Benar</option>
+      <option value="wrong">Salah</option>
+    </select></label>
+    <span class="filterinfo" id="filterInfo"></span>
+  </section>
+
+  <div class="layout">
+    <main>
+      <section id="qcard" class="card" aria-live="polite"></section>
+      <div class="actions" id="actions"></div>
+      <section id="results" class="card results hidden"></section>
+    </main>
+
+    <aside class="sidebar">
+      <div class="card navcard">
+        <div class="navhead">Navigasi Soal</div>
+        <div class="navgrid" id="navgrid"></div>
+        <div class="legend">
+          <span><i class="l-ok"></i>Benar</span>
+          <span><i class="l-err"></i>Salah</span>
+          <span><i class="l-ans"></i>Terjawab</span>
+          <span><i class="l-empty"></i>Kosong</span>
+        </div>
+      </div>
+      <div class="card navcard">
+        <div class="navhead">Pintasan</div>
+        <div class="kbdhint">
+          <kbd>←</kbd> <kbd>→</kbd> pindah soal<br>
+          <kbd>1</kbd>–<kbd>5</kbd> atau <kbd>A</kbd>–<kbd>E</kbd> pilih jawaban<br>
+          <kbd>Enter</kbd> cek / lanjut
+        </div>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   DATA SOAL — 50 butir, disalin apa adanya dari hasil AI.
+   Tidak ada isi soal yang diubah.
+   ========================================================= */
+const TOPIK = {
+  t1: `Dasar Logika & Algoritma`,
+  t2: `Konsep Algoritma & Tipe Data`,
+  t3: `Flowchart`,
+  t4: `Branching (Percabangan)`,
+  t5: `Looping (Perulangan)`,
+  t6: `Struktur Rekursif`
+};
+const SIL = `SILABUS_207_1235.pdf`;
+const RTM = `RTM_207_1935.pdf`;
+
+const QUESTIONS = [
+/* ---------- TOPIK 1 (1–8) ---------- */
+{id:1, topik:TOPIK.t1, bloom:`C1`, tujuan:`Menjelaskan definisi logika (C1)`,
+ soal:`Apa yang dimaksud dengan logika dalam konteks pemecahan masalah?`,
+ opsi:[`Bahasa pemrograman untuk membuat aplikasi`,
+       `Hasil penalaran yang didasarkan pada kebenaran dan nalar yang masuk akal`,
+       `Langkah-langkah sistematis yang ditulis dengan kode komputer`,
+       `Teknik menyusun diagram alir`,
+       `Cara menguji program menggunakan data palsu`],
+ kunci:1,
+ pembahasan:`Logika berasal dari kata 'logos' yang berarti hasil pertimbangan akal pikiran yang diutarakan lewat kata dan dinyatakan dalam bahasa. Logika adalah dasar dari penalaran pemecahan masalah.`,
+ ref:`${SIL} — Materi 1: Pengertian Dasar Logika dan Algoritma`},
+
+{id:2, topik:TOPIK.t1, bloom:`C1`, tujuan:`Menjelaskan definisi algoritma (C1)`,
+ soal:`Serangkaian langkah-langkah yang disusun secara logis dan sistematis untuk menyelesaikan suatu masalah disebut...`,
+ opsi:[`Logika`,`Program`,`Algoritma`,`Flowchart`,`Pseudocode`],
+ kunci:2,
+ pembahasan:`Algoritma adalah urutan langkah-langkah logis penyelesaian masalah yang disusun secara sistematis.`,
+ ref:`${SIL} — Materi 1`},
+
+{id:3, topik:TOPIK.t1, bloom:`C2`, tujuan:`Memahami kriteria algoritma (C2)`,
+ soal:`Manakah dari berikut ini yang BUKAN merupakan kriteria algoritma yang baik menurut Donald Knuth?`,
+ opsi:[`Finiteness (Keterbatasan)`,`Definiteness (Kepastian)`,`Ambiguity (Keambiguan)`,`Input dan Output`,`Effectiveness (Efektivitas)`],
+ kunci:2,
+ pembahasan:`Kriteria algoritma yang baik harus bebas dari keambiguan (harus Definiteness/pasti).`,
+ ref:`${SIL} — Materi 1: Kriteria Algoritma`},
+
+{id:4, topik:TOPIK.t1, bloom:`C2`, tujuan:`Memahami kriteria algoritma (C2)`,
+ soal:`Sebuah algoritma harus memiliki titik henti setelah mengerjakan sejumlah langkah operasional. Kriteria ini disebut...`,
+ opsi:[`Finiteness`,`Definiteness`,`Output`,`Effectiveness`,`Input`],
+ kunci:0,
+ pembahasan:`Finiteness (keterbatasan) berarti algoritma harus berakhir setelah melakukan sejumlah langkah proses.`,
+ ref:`${SIL} — Materi 1: Kriteria Algoritma`},
+
+{id:5, topik:TOPIK.t1, bloom:`C3`, tujuan:`Menganalisa tahapan algoritma (C3)`,
+ soal:`Urutan tahapan penyelesaian masalah menggunakan komputer yang paling tepat adalah...`,
+ opsi:[`Masalah → Program → Algoritma → Eksekusi → Hasil`,
+       `Masalah → Algoritma → Flowchart → Program → Eksekusi → Hasil`,
+       `Algoritma → Masalah → Program → Eksekusi → Hasil`,
+       `Flowchart → Masalah → Algoritma → Eksekusi`,
+       `Masalah → Eksekusi → Program → Algoritma`],
+ kunci:1,
+ pembahasan:`Tahapan rasional adalah memahami masalah, menyusun algoritma/flowchart, menerjemahkan ke program, lalu dieksekusi untuk mendapat hasil.`,
+ ref:`${SIL} — Materi 1: Tahapan Penyelesaian Masalah`},
+
+{id:6, topik:TOPIK.t1, bloom:`C3`, tujuan:`Menganalisa tahapan algoritma (C3)`,
+ soal:`Apa tujuan utama dari tahapan Analisa Algoritma?`,
+ opsi:[`Menerjemahkan bahasa manusia ke bahasa mesin`,
+       `Memperindah tampilan antarmuka program`,
+       `Mengetahui efisiensi waktu eksekusi dan penggunaan memori (ruang)`,
+       `Menghapus kode yang error`,
+       `Membuat diagram alir`],
+ kunci:2,
+ pembahasan:`Analisa algoritma bertujuan untuk mengukur efisiensi dari algoritma, biasanya dari segi waktu (time complexity) dan memori (space complexity).`,
+ ref:`${SIL} — Materi 1: Tahapan Analisa Algoritma`},
+
+{id:7, topik:TOPIK.t1, bloom:`C4`, tujuan:`Menganalisa masalah logika pertukaran (C4)`,
+ soal:`Diketahui dua buah gelas: Gelas A berisi Kopi, Gelas B berisi Teh. Jika kita ingin menukar isinya (Gelas A menjadi Teh, Gelas B menjadi Kopi), langkah logika/algoritma pertukaran peubah yang benar membutuhkan...`,
+ opsi:[`1 gelas tambahan (Gelas C)`,
+       `2 gelas tambahan (Gelas C dan D)`,
+       `Tanpa gelas tambahan`,
+       `Gelas A dibuang isinya`,
+       `Gelas B dicampur ke Gelas A`],
+ kunci:0,
+ pembahasan:`Untuk menukar dua nilai variabel, dibutuhkan satu variabel tambahan (temporer) agar nilai asli tidak tertimpa/hilang.`,
+ ref:`${SIL} — Materi 2: Algoritma Peubah dan Pertukaran`},
+
+{id:8, topik:TOPIK.t1, bloom:`C4`, tujuan:`Evaluasi tahapan algoritma dari kasus (C4)`,
+ soal:`Suatu algoritma menghitung luas persegi panjang berisi instruksi: 1) Input Panjang, 2) Input Lebar, 3) Luas = Panjang / Lebar, 4) Tampilkan Luas. Kesalahan pada algoritma tersebut terdapat pada tahap...`,
+ opsi:[`Input`,`Deklarasi`,`Proses aritmatika`,`Output`,`Tipe data`],
+ kunci:2,
+ pembahasan:`Rumus luas persegi panjang yang benar adalah Panjang × Lebar, bukan Panjang / Lebar.`,
+ ref:`${SIL} — Materi 1: Tahapan Penyelesaian Masalah`},
+
+/* ---------- TOPIK 2 (9–16) ---------- */
+{id:9, topik:TOPIK.t2, bloom:`C1`, tujuan:`Menjelaskan tipe data Python (C1)`,
+ soal:`Tipe data di Python yang digunakan untuk menyimpan bilangan bulat (tanpa koma desimal) adalah...`,
+ opsi:[`Float`,`String`,`Integer`,`Boolean`,`Character`],
+ kunci:2,
+ pembahasan:`Integer (int) adalah tipe data bilangan bulat.`,
+ ref:`${SIL} — Materi 2: Tipe Data pada Python`},
+
+{id:10, topik:TOPIK.t2, bloom:`C1`, tujuan:`Menjelaskan tipe data Python (C1)`,
+ soal:`Di bawah ini, manakah yang merupakan nilai Boolean pada bahasa Python?`,
+ opsi:[`"True" dan "False"`,`True dan False`,`1 dan 2`,`'T' dan 'F'`,`YES dan NO`],
+ kunci:1,
+ pembahasan:`Boolean pada Python ditulis dengan huruf kapital di awal tanpa tanda kutip: True dan False.`,
+ ref:`${SIL} — Materi 2`},
+
+{id:11, topik:TOPIK.t2, bloom:`C2`, tujuan:`Mengidentifikasi tipe data (C2)`,
+ soal:`Jika di Python diberikan instruksi x = 5.5, maka Python akan secara otomatis menetapkan variabel x dengan tipe data...`,
+ opsi:[`Integer`,`String`,`Float`,`List`,`Boolean`],
+ kunci:2,
+ pembahasan:`Nilai dengan desimal (menggunakan titik) secara otomatis dikenali sebagai tipe float di Python.`,
+ ref:`${SIL} — Materi 2`},
+
+{id:12, topik:TOPIK.t2, bloom:`C3`, tujuan:`Menerapkan operator aritmatika (C3)`,
+ soal:`Operator aritmatika di Python yang digunakan untuk mendapatkan sisa hasil bagi adalah...`,
+ opsi:[`/`,`//`,`*`,`%`,`**`],
+ kunci:3,
+ pembahasan:`Simbol % (modulus) digunakan untuk mencari sisa hasil bagi.`,
+ ref:`${SIL} — Materi 2: Operator Aritmatika`},
+
+{id:13, topik:TOPIK.t2, bloom:`C3`, tujuan:`Evaluasi ekspresi aritmatika (C3)`,
+ soal:`Hasil dari ekspresi aritmatika 7 // 2 pada Python adalah...`,
+ opsi:[`3.5`,`3`,`4`,`1`,`0`],
+ kunci:1,
+ pembahasan:`Operator // (floor division) membagi bilangan dan membulatkannya ke bawah menjadi integer.`,
+ ref:`${SIL} — Materi 2`},
+
+{id:14, topik:TOPIK.t2, bloom:`C3`, tujuan:`Evaluasi ekspresi perbandingan (C3)`,
+ soal:`Hasil dari operasi perbandingan 10 != 5 adalah...`,
+ opsi:[`True`,`False`,`5`,`15`,`Error`],
+ kunci:0,
+ pembahasan:`!= berarti "tidak sama dengan". Karena 10 tidak sama dengan 5, hasilnya adalah True.`,
+ ref:`${SIL} — Materi 2: Operator Perbandingan`},
+
+{id:15, topik:TOPIK.t2, bloom:`C4`, tujuan:`Analisis output pertukaran Python (C4)`,
+ soal:`Diberikan kode Python untuk menukar nilai variabel: A, B = B, A. Jika nilai awal A = 10 dan B = 20, apa nilai A dan B setelah instruksi tersebut?`,
+ opsi:[`A = 10, B = 20`,`A = 20, B = 10`,`A = 20, B = 20`,`A = 10, B = 10`,`Error program`],
+ kunci:1,
+ pembahasan:`Python mendukung sintaks multiple assignment. A, B = B, A secara langsung menukar nilai kedua variabel tanpa variabel temporer.`,
+ ref:`${SIL} — Materi 2: Algoritma Peubah dan Pertukaran`},
+
+{id:16, topik:TOPIK.t2, bloom:`C4`, tujuan:`Analisis tipe data dan operasi (C4)`,
+ soal:`Analisislah eksekusi baris berikut: uang = int("5000") + 2000. Hasil yang disimpan pada variabel uang adalah...`,
+ opsi:[`"50002000"`,`50002000`,`7000`,`"7000"`,`TypeError`],
+ kunci:2,
+ pembahasan:`Teks "5000" di-casting (diubah) menjadi integer 5000 terlebih dahulu, lalu ditambah 2000 secara matematis menghasilkan 7000.`,
+ ref:`${RTM} — Tugas 1: Input sisa uang`},
+
+/* ---------- TOPIK 3 (17–24) ---------- */
+{id:17, topik:TOPIK.t3, bloom:`C1`, tujuan:`Identifikasi simbol flowchart (C1)`,
+ soal:`Flowchart adalah bentuk representasi visual dari algoritma. Simbol berbentuk Oval (Terminator) berfungsi untuk...`,
+ opsi:[`Memulai atau mengakhiri program`,`Membaca input`,`Melakukan proses/perhitungan`,
+       `Mengambil keputusan (percabangan)`,`Mencetak output`],
+ kunci:0,
+ pembahasan:`Terminator (oval/elips) menunjukkan Start atau End dari sebuah flowchart.`,
+ ref:`${SIL} — Materi 3: Simbol-simbol flowchart`},
+
+{id:18, topik:TOPIK.t3, bloom:`C1`, tujuan:`Identifikasi simbol flowchart (C1)`,
+ soal:`Simbol flowchart berbentuk Persegi Panjang digunakan untuk merepresentasikan tahap...`,
+ opsi:[`Start / End`,`Proses / Penugasan (Assignment)`,`Input data`,`Output ke layar`,`Keputusan / Decision`],
+ kunci:1,
+ pembahasan:`Persegi panjang melambangkan proses operasional, perhitungan, atau penugasan variabel.`,
+ ref:`${SIL} — Materi 3`},
+
+{id:19, topik:TOPIK.t3, bloom:`C2`, tujuan:`Identifikasi simbol decision (C2)`,
+ soal:`Jika algoritma memerlukan pengecekan kondisi "Apakah Bilangan > 0?", simbol flowchart yang digunakan berbentuk...`,
+ opsi:[`Oval`,`Persegi Panjang`,`Jajar Genjang`,`Belah Ketupat (Diamond)`,`Lingkaran`],
+ kunci:3,
+ pembahasan:`Belah ketupat adalah simbol Decision (keputusan) yang memiliki cabang Ya dan Tidak.`,
+ ref:`${SIL} — Materi 3`},
+
+{id:20, topik:TOPIK.t3, bloom:`C2`, tujuan:`Identifikasi simbol I/O (C2)`,
+ soal:`Simbol Jajar Genjang dalam flowchart memiliki fungsi untuk menyatakan instruksi...`,
+ opsi:[`Proses perhitungan matematika`,`Start dan End`,`Input dan Output data`,
+       `Pengecekan kondisi IF`,`Konektor ke halaman lain`],
+ kunci:2,
+ pembahasan:`Jajar genjang (parallelogram) merepresentasikan operasi I/O (Input/Output).`,
+ ref:`${SIL} — Materi 3`},
+
+{id:21, topik:TOPIK.t3, bloom:`C3`, tujuan:`Memahami alir flowchart (C3)`,
+ soal:`Tanda panah (Arrow) pada flowchart berfungsi sebagai...`,
+ opsi:[`Penghubung beda halaman`,`Menandakan akhir algoritma`,
+       `Menunjukkan arah aliran eksekusi instruksi (Flow Direction)`,
+       `Mengganti variabel`,`Mengulangi proses secara otomatis`],
+ kunci:2,
+ pembahasan:`Tanda panah menunjukkan flow/arah jalannya proses dari satu langkah ke langkah selanjutnya.`,
+ ref:`${SIL} — Materi 3: Struktur Flowchart`},
+
+{id:22, topik:TOPIK.t3, bloom:`C3`, tujuan:`Menentukan alir program (C3)`,
+ soal:`Dari struktur di bawah ini, urutan flowchart untuk "Menentukan kelulusan jika nilai >= 60" yang benar adalah:`,
+ opsi:[`Start → Proses Nilai → Input Nilai → Decision(Lulus/Gagal) → End`,
+       `Start → Input Nilai → Decision(Nilai >= 60) → Output(Lulus/Gagal) → End`,
+       `Start → Decision(Nilai >= 60) → Input Nilai → End`,
+       `Input Nilai → Start → Decision → Output → End`,
+       `Start → Input Nilai → Output → Decision → End`],
+ kunci:1,
+ pembahasan:`Algoritma harus mulai (Start), meminta data (Input), mengecek kondisi (Decision), mencetak hasil (Output), lalu selesai (End).`,
+ ref:`${SIL} — Materi 3`},
+
+{id:23, topik:TOPIK.t3, bloom:`C4`, tujuan:`Analisis kesalahan struktur flowchart (C4)`,
+ soal:`Sebuah diagram alir memiliki simbol Belah Ketupat (Decision) namun hanya memiliki 1 tanda panah keluar. Kesalahan pada logika ini adalah...`,
+ opsi:[`Decision harus diganti persegi panjang`,`Decision tidak memerlukan panah keluar`,
+       `Decision wajib memiliki minimal 2 panah keluar (True dan False)`,
+       `Panah keluarnya harus terhubung ke Start`,`Panah keluarnya harus terhubung ke End`],
+ kunci:2,
+ pembahasan:`Syarat percabangan (decision) adalah membelah aliran menjadi dua kemungkinan (Benar/Salah).`,
+ ref:`${SIL} — Materi 3`},
+
+{id:24, topik:TOPIK.t3, bloom:`C4`, tujuan:`Evaluasi logika bilangan terbesar (C4)`,
+ soal:`Dalam membuat flowchart untuk mencari nilai terbesar dari empat bilangan, struktur keputusan (decision) minimal yang digunakan sangat bergantung pada metode pencariannya. Berapa minimal pengecekan perbandingan yang dibutuhkan untuk mencari nilai terbesar dari 4 bilangan (A, B, C, D) tanpa array?`,
+ opsi:[`1 kali`,`2 kali`,`3 kali`,`4 kali`,`5 kali`],
+ kunci:2,
+ pembahasan:`Pengecekan 1: (A vs B, simpan max1), Pengecekan 2: (C vs D, simpan max2), Pengecekan 3: (max1 vs max2). Total 3 perbandingan.`,
+ ref:`${RTM} — Tugas 2: Menentukan bilangan terbesar dari 4 bilangan`},
+
+/* ---------- TOPIK 4 (25–33) ---------- */
+{id:25, topik:TOPIK.t4, bloom:`C1`, tujuan:`Memahami sintaks if Python (C1)`,
+ soal:`Kata kunci (keyword) yang digunakan untuk mendefinisikan struktur percabangan di Python adalah...`,
+ opsi:[`branch, then`,`if, elif, else`,`switch, case, break`,`for, while, do`,`try, catch, finally`],
+ kunci:1,
+ pembahasan:`Struktur percabangan di Python menggunakan if, elif (else if), dan else. Python tidak menggunakan switch-case secara natif.`,
+ ref:`${SIL} — Materi 4: Struktur Branching`},
+
+{id:26, topik:TOPIK.t4, bloom:`C2`, tujuan:`Memahami struktur sintaks (C2)`,
+ soal:`Ciri khas penulisan blok kode percabangan dalam Python adalah penggunaan...`,
+ opsi:[`Tanda kurung kurawal { }`,`Tanda kurung siku [ ]`,
+       `Indentasi (spasi/tab) setelah tanda titik dua :`,`Tanda titik koma ;`,`Keyword EndIf`],
+ kunci:2,
+ pembahasan:`Python mengandalkan indentasi untuk mendefinisikan blok statement setelah keyword if, elif, atau else yang diakhiri tanda :.`,
+ ref:`${SIL} — Materi 4`},
+
+{id:27, topik:TOPIK.t4, bloom:`C2`, tujuan:`Memahami if-else statement (C2)`,
+ soal:`Struktur percabangan if ... else digunakan apabila...`,
+ opsi:[`Hanya ada 1 kondisi tanpa opsi lain`,
+       `Terdapat 2 pilihan yang bergantung pada satu kondisi benar atau salah`,
+       `Terdapat perulangan proses`,`Memiliki lebih dari 3 kondisi berbeda`,
+       `Menentukan tipe data variabel`],
+ kunci:1,
+ pembahasan:`if ... else menangani dua aliran eksekusi: satu jalan jika kondisi bernilai True, dan jalan lain (else) jika bernilai False.`,
+ ref:`${SIL} — Materi 4`},
+
+{id:28, topik:TOPIK.t4, bloom:`C3`, tujuan:`Penerapan if (C3)`,
+ soal:`Pada Python, untuk mengecek apakah nilai variabel angka bernilai Genap, kondisi logika yang tepat pada if adalah...`,
+ opsi:[`if angka / 2 == 0:`,`if angka // 2 == 0:`,`if angka % 2 == 0:`,
+       `if angka * 2 == 0:`,`if angka % 2 != 0:`],
+ kunci:2,
+ pembahasan:`Bilangan genap adalah bilangan yang habis dibagi 2 (sisa hasil bagi/modulus = 0).`,
+ ref:`${SIL} — Materi 4`},
+
+{id:29, topik:TOPIK.t4, bloom:`C3`, tujuan:`Penerapan elif (C3)`,
+ soal:`Diberikan skenario: Jika Nilai >= 80 grade "A", jika >= 70 grade "B", sisanya "C". Penulisan struktur if yang tepat di Python adalah...`,
+ opsi:[`if nilai >= 80: grade="A" else if nilai >= 70: grade="B" else: grade="C"`,
+       `if nilai >= 80: grade="A" elif nilai >= 70: grade="B" else: grade="C"`,
+       `if nilai >= 80: grade="A" elseif nilai >= 70: grade="B" else: grade="C"`,
+       `if (nilai >= 80) { grade="A" } elif (nilai >= 70) { grade="B" }`,
+       `if nilai >= 80 grade="A" elif nilai >= 70 grade="B" else grade="C"`],
+ kunci:1,
+ pembahasan:`Sintaks percabangan lebih dari 2 kondisi di Python menggunakan if ... elif ... else (beserta tanda : dan indentasi).`,
+ ref:`${SIL} — Materi 4`},
+
+{id:30, topik:TOPIK.t4, bloom:`C2`, tujuan:`Memahami konsep Nested if (C2)`,
+ soal:`Nested if (If bersarang) artinya adalah...`,
+ opsi:[`Menjalankan if berulang kali dalam satu baris`,`Struktur if yang tidak memiliki else`,
+       `Struktur if yang diletakkan di dalam blok if lainnya`,`Menggunakan if untuk mengecek error`,
+       `If yang dieksekusi bersamaan dengan while`],
+ kunci:2,
+ pembahasan:`Nested if adalah ketika sebuah percabangan memiliki percabangan lain di dalam blok kodenya.`,
+ ref:`${SIL} — Materi 4: Struktur Percabangan Nested if`},
+
+{id:31, topik:TOPIK.t4, bloom:`C4`, tujuan:`Tracing kode nested if (C4)`,
+ soal:`Perhatikan potongan kode berikut. Output dari program di atas adalah...`,
+ kode:`x = 10
+if x > 5:
+    if x < 8:
+        print("A")
+    else:
+        print("B")
+else:
+    print("C")`,
+ opsi:[`A`,`B`,`C`,`Error`,`Tidak mencetak apa-apa`],
+ kunci:1,
+ pembahasan:`x = 10. if 10 > 5 (True), masuk ke blok nested. Cek if 10 < 8 (False), maka masuk ke else dan mencetak "B".`,
+ ref:`${SIL} — Materi 4`},
+
+{id:32, topik:TOPIK.t4, bloom:`C4`, tujuan:`Analisis logika salah urutan (C4)`,
+ soal:`Perhatikan logika percabangan untuk diskon berikut. Jika variabel beli = 100, berapa nilai diskon?`,
+ kode:`if beli > 10: diskon = 5
+elif beli > 50: diskon = 20`,
+ opsi:[`0`,`5`,`20`,`25`,`Error`],
+ kunci:1,
+ pembahasan:`Karena 100 > 10 bernilai True, kondisi pertama langsung tereksekusi (diskon=5) dan keluar dari blok if-elif. Kondisi > 50 tidak akan pernah tersentuh. Ini adalah kesalahan logika pengurutan kondisi (harus dari batas tertinggi dulu).`,
+ ref:`${SIL} — Materi 4`},
+
+{id:33, topik:TOPIK.t4, bloom:`C5`, tujuan:`Evaluasi logika bilangan terbesar (C5)`,
+ soal:`Pada Tugas Mandiri 2 (RTM), diminta membuat program mencari nilai terbesar dari 4 bilangan. Apa konsep percabangan paling efisien yang disarankan?`,
+ opsi:[`Menggunakan 4 if tunggal tanpa else`,
+       `Menginisialisasi variabel max = bilangan_1, lalu mengecek if bilangan_n > max: max = bilangan_n berulang kali`,
+       `Menggunakan loop while tak terhingga`,`Menggunakan Nested Loop`,
+       `Tidak bisa diselesaikan dengan if`],
+ kunci:1,
+ pembahasan:`Logika pencarian nilai maksimum paling efisien (tanpa fungsi bawaan max()) adalah dengan menganggap elemen pertama sebagai maksimum sementara, lalu dibandingkan dengan sisa elemen secara sekuensial dengan struktur percabangan.`,
+ ref:`${RTM} — Tugas 2`},
+
+/* ---------- TOPIK 5 (34–42) ---------- */
+{id:34, topik:TOPIK.t5, bloom:`C1`, tujuan:`Memahami sintaks for (C1)`,
+ soal:`Statement dalam Python yang tepat untuk melakukan perulangan (looping) secara terkontrol (dengan jumlah iterasi yang diketahui) adalah...`,
+ opsi:[`if`,`for`,`while`,`switch`,`do-while`],
+ kunci:1,
+ pembahasan:`Perulangan for digunakan saat jumlah iterasi sudah diketahui (iterasi elemen sequence seperti list atau range).`,
+ ref:`${SIL} — Materi 5: Perulangan For`},
+
+{id:35, topik:TOPIK.t5, bloom:`C1`, tujuan:`Memahami sintaks while (C1)`,
+ soal:`Struktur perulangan while di Python akan terus mengeksekusi blok kode di dalamnya selama...`,
+ opsi:[`Jumlah data belum habis`,`Ditemukan keyword break`,
+       `Kondisi logikanya bernilai True`,`Kondisi logikanya bernilai False`,
+       `Tidak ada error dalam kode`],
+ kunci:2,
+ pembahasan:`Perulangan while berjalan berdasarkan pengujian kondisi (condition-controlled loop). Akan terus berjalan selama kondisi bernilai True.`,
+ ref:`${SIL} — Materi 5: Perulangan While`},
+
+{id:36, topik:TOPIK.t5, bloom:`C2`, tujuan:`Memahami fungsi range (C2)`,
+ soal:`Fungsi bawaan Python range(1, 5) pada struktur perulangan for i in range(1, 5): akan menghasilkan deret angka...`,
+ opsi:[`1, 2, 3, 4, 5`,`0, 1, 2, 3, 4`,`1, 2, 3, 4`,`2, 3, 4, 5`,`1, 5`],
+ kunci:2,
+ pembahasan:`range(start, stop) memulai dari start hingga stop - 1. Jadi range(1, 5) menghasilkan 1, 2, 3, 4.`,
+ ref:`${SIL} — Materi 5`},
+
+{id:37, topik:TOPIK.t5, bloom:`C3`, tujuan:`Tracing for loop (C3)`,
+ soal:`Perhatikan kode berikut. Berapa nilai akhir dari variabel total?`,
+ kode:`total = 0
+for i in range(3):
+    total = total + i`,
+ opsi:[`3`,`6`,`0`,`2`,`5`],
+ kunci:0,
+ pembahasan:`range(3) menghasilkan iterasi: i=0, i=1, i=2. Loop 1: total = 0 + 0 = 0. Loop 2: total = 0 + 1 = 1. Loop 3: total = 1 + 2 = 3.`,
+ ref:`${SIL} — Materi 5`},
+
+{id:38, topik:TOPIK.t5, bloom:`C3`, tujuan:`Tracing while loop (C3)`,
+ soal:`Perhatikan potongan kode berikut. Berapa kali perintah print(x) dieksekusi?`,
+ kode:`x = 5
+while x > 2:
+    print(x)
+    x = x - 2`,
+ opsi:[`1 kali`,`2 kali`,`3 kali`,`Tidak dieksekusi`,`Loop tak terhingga (Infinite loop)`],
+ kunci:1,
+ pembahasan:`Iterasi 1: x = 5 (True, 5>2), print 5, x menjadi 3. Iterasi 2: x = 3 (True, 3>2), print 3, x menjadi 1. Iterasi 3: x = 1 (False, 1>2), perulangan berhenti. Total dieksekusi 2 kali.`,
+ ref:`${SIL} — Materi 5`},
+
+{id:39, topik:TOPIK.t5, bloom:`C2`, tujuan:`Memahami konsep Nested Loop (C2)`,
+ soal:`Istilah Nested Loop mengacu pada situasi di mana...`,
+ opsi:[`Sebuah perulangan berhenti sebelum waktunya`,
+       `Di dalam blok perulangan terdapat perulangan lain`,
+       `Sebuah perulangan tidak memiliki kondisi henti`,
+       `Perulangan for diubah menjadi while`,
+       `Perulangan yang mengakses tipe data boolean`],
+ kunci:1,
+ pembahasan:`Sesuai namanya, nested loop (perulangan bersarang) adalah struktur kontrol loop yang diletakkan di dalam struktur loop lainnya.`,
+ ref:`${SIL} — Materi 5: Nested Loop`},
+
+{id:40, topik:TOPIK.t5, bloom:`C4`, tujuan:`Analisis program segitiga (C4)`,
+ soal:`Pada Tugas 3 (RTM), mahasiswa diminta membuat program pola segitiga menggunakan karakter. Konsep algoritma apa yang paling wajib digunakan untuk mencetak baris dan kolom karakter menjadi bentuk segitiga?`,
+ opsi:[`Nested if`,`Fungsi rekursif`,`Nested loop (Perulangan bersarang)`,
+       `Operator logika OR`,`Flowchart jajar genjang`],
+ kunci:2,
+ pembahasan:`Untuk mencetak pola dimensi ganda (baris dan kolom/pola bintang), mutlak dibutuhkan nested loop (satu loop untuk turun baris, satu loop di dalamnya untuk mencetak karakter per kolom).`,
+ ref:`${RTM} — Tugas 3: Menggambar pola segitiga`},
+
+{id:41, topik:TOPIK.t5, bloom:`C4`, tujuan:`Menerapkan loop pada studi kasus (C4)`,
+ soal:`Pada lirik lagu "anak ayam turun berkotek" (Tugas 3 RTM), variabel N di-inputkan dan nilainya selalu berkurang 1 pada tiap iterasi. Jika digunakan for loop, bentuk range yang paling sesuai untuk mencetak lirik mundur adalah...`,
+ opsi:[`range(1, N)`,`range(N, 0, -1)`,`range(N)`,`range(0, N, 1)`,`range(-1, N)`],
+ kunci:1,
+ pembahasan:`Fungsi range(start, stop, step) dengan step negatif (-1) digunakan untuk perulangan menurun (descending/mundur), sesuai lirik "turunlah N, mati satu tinggallah N-1".`,
+ ref:`${RTM} — Tugas 3: Lagu anak ayam`},
+
+{id:42, topik:TOPIK.t5, bloom:`C5`, tujuan:`Deteksi infinite loop (C5)`,
+ soal:`Kondisi Infinite Loop (loop tak terhingga) pada perulangan while biasanya disebabkan oleh...`,
+ opsi:[`Penggunaan variabel i dalam program`,`Tidak adanya tanda indentasi`,
+       `Lupa menginisialisasi variabel`,
+       `Kondisi pengecekan selalu bernilai True karena nilai variabel tidak pernah diperbarui di dalam loop`,
+       `Menggunakan keyword break`],
+ kunci:3,
+ pembahasan:`Jika kondisi selalu True (misal lupa menaruh increment/decrement pengubah nilai kondisi), maka while tidak akan pernah berhenti.`,
+ ref:`${SIL} — Materi 5`},
+
+/* ---------- TOPIK 6 (43–50) ---------- */
+{id:43, topik:TOPIK.t6, bloom:`C2`, tujuan:`Memahami konsep dasar rekursif (C2)`,
+ soal:`Fungsi yang memanggil dirinya sendiri secara langsung maupun tidak langsung dalam blok kodenya disebut...`,
+ opsi:[`Fungsi iteratif`,`Fungsi rekursif`,`Fungsi looping`,`Fungsi bertingkat`,`Void function`],
+ kunci:1,
+ pembahasan:`Konsep rekursif (recursion) dalam pemrograman adalah subprogram/fungsi yang memanggil dirinya sendiri.`,
+ ref:`${SIL} — Materi 6: Struktur Rekursif`},
+
+{id:44, topik:TOPIK.t6, bloom:`C2`, tujuan:`Memahami syarat rekursif (C2)`,
+ soal:`Agar fungsi rekursif tidak mengalami infinite recursion (pemanggilan tak berujung), struktur rekursif mutlak harus memiliki...`,
+ opsi:[`Parameter bertipe float`,`Loop for di dalamnya`,`Base case (kondisi henti)`,
+       `Nilai kembalian tipe String`,`Minimal 2 argumen`],
+ kunci:2,
+ pembahasan:`Base case adalah syarat atau batasan yang menyebabkan fungsi berhenti memanggil dirinya sendiri dan mulai mengembalikan nilai.`,
+ ref:`${SIL} — Materi 6`},
+
+{id:45, topik:TOPIK.t6, bloom:`C3`, tujuan:`Memahami base case faktorial (C3)`,
+ soal:`Pada perhitungan Faktorial secara rekursif, N! = N * (N-1)!. Apa base case standar yang tepat untuk algoritma faktorial?`,
+ opsi:[`Jika N == 0 maka return 0`,`Jika N == 1 maka return 1 (atau N == 0 return 1)`,
+       `Jika N < 0 maka return 1`,`Jika N == 10 maka berhenti`,`Jika N == 2 maka return N`],
+ kunci:1,
+ pembahasan:`Faktorial 0! dan 1! adalah 1. Oleh karena itu, jika nilai mencapai 1 atau 0, rekursi dihentikan dan mengembalikan nilai 1.`,
+ ref:`${SIL} — Materi 6: Faktorial`},
+
+{id:46, topik:TOPIK.t6, bloom:`C3`, tujuan:`Menerapkan fungsi fibonacci rekursif (C3)`,
+ soal:`Berikut adalah deret Fibonacci: 0, 1, 1, 2, 3, 5, 8, .... Rumus dasar rekursif dari fungsi Fibonacci ke-N adalah...`,
+ opsi:[`Fib(N) = Fib(N-1) * Fib(N-2)`,`Fib(N) = Fib(N-1) + Fib(N-2)`,
+       `Fib(N) = Fib(N) + Fib(N-1)`,`Fib(N) = N + Fib(N-1)`,`Fib(N) = N * Fib(N)`],
+ kunci:1,
+ pembahasan:`Dalam matematika dan algoritma, setiap elemen (ke-N) pada deret Fibonacci (setelah 2 suku pertama) merupakan jumlahan dari 2 suku sebelumnya.`,
+ ref:`${SIL} — Materi 6: Fibonacci`},
+
+{id:47, topik:TOPIK.t6, bloom:`C3`, tujuan:`Identifikasi penerapan rekursif (C3)`,
+ soal:`Pemecahan masalah "Menara Hanoi" (Tower of Hanoi) sangat ideal dikerjakan menggunakan...`,
+ opsi:[`if...else`,`Tipe data Boolean`,`Algoritma Pertukaran Biasa`,`Struktur Rekursif`,`Struktur Switch Case`],
+ kunci:3,
+ pembahasan:`Menara Hanoi memiliki pola pergerakan disk (piringan) yang berulang ke tiang bantuan (auxiliary) dan tiang tujuan (destination) yang dapat dipetakan secara elegan menggunakan algoritma rekursif.`,
+ ref:`${SIL} — Materi 6: Menara Hanoi`},
+
+{id:48, topik:TOPIK.t6, bloom:`C4`, tujuan:`Tracing rekursif pangkat (C4)`,
+ soal:`Diberikan fungsi pangkat rekursif berikut (asumsi Pangkat >= 0). Berapa hasil dari pangkat(2, 3)?`,
+ kode:`def pangkat(a, n):
+    if n == 0:
+        return 1
+    else:
+        return a * pangkat(a, n - 1)`,
+ opsi:[`5`,`6`,`8`,`9`,`1`],
+ kunci:2,
+ pembahasan:`pangkat(2,3) → 2 * pangkat(2,2) → 2 * 2 * pangkat(2,1) → 2 * 2 * 2 * pangkat(2,0). Karena pangkat(2,0) = 1, maka hasil = 2*2*2*1 = 8.`,
+ ref:`${SIL} — Materi 6: Fungsi Pangkat`},
+
+{id:49, topik:TOPIK.t6, bloom:`C4`, tujuan:`Analisis kompleksitas rekursif (C4)`,
+ soal:`Dalam permasalahan Menara Hanoi untuk memindahkan N buah piringan, kompleksitas jumlah pemindahan minimal yang dibutuhkan dinyatakan dengan rumus...`,
+ opsi:[`N² − 1`,`2^N − 1`,`N × 2`,`N!`,`2 × N + 1`],
+ kunci:1,
+ pembahasan:`Secara matematis dan algoritma rekursif Hanoi, jumlah langkah optimal untuk N disk adalah 2^N − 1.`,
+ ref:`${SIL} — Materi 6: Menara Hanoi`},
+
+{id:50, topik:TOPIK.t6, bloom:`C5`, tujuan:`Evaluasi kesalahan base case rekursif (C5)`,
+ soal:`Apa yang akan terjadi jika dalam membuat program Faktorial dengan pendekatan rekursif, programmer lupa menuliskan perintah return 1 pada kondisi if N == 1?`,
+ opsi:[`Program langsung mengembalikan nilai 0`,
+       `Menghasilkan error berupa Maximum recursion depth exceeded (Stack Overflow)`,
+       `Hasil faktorial dikalikan dengan minus`,
+       `Otomatis berhenti berkat garbage collector Python`,
+       `Program langsung mencetak output False`],
+ kunci:1,
+ pembahasan:`Tanpa adanya base case yang mendefinisikan return, fungsi akan memanggil dirinya sendiri tak berhingga sampai tumpukan memori penuh (Stack Overflow), menghasilkan error rekursi batas maksimal terlampaui.`,
+ ref:`${SIL} — Materi 6`}
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const KEY = 'uts-logika-algoritma-v1';
+const LETTERS = ['A','B','C','D','E'];
+const TOTAL = QUESTIONS.length;
+
+const defaultState = () => ({
+  mode: 'latihan',
+  index: 1,
+  answers: {},
+  checked: {},
+  showResults: false,
+  exam: { startedAt: null, finishedAt: null },
+  filter: { topik: 'all', bloom: 'all', status: 'all' },
+  theme: 'light'
+});
+
+let state = load();
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return defaultState();
+    const p = JSON.parse(raw);
+    return Object.assign(defaultState(), p, {
+      filter: Object.assign(defaultState().filter, p.filter || {}),
+      exam: Object.assign(defaultState().exam, p.exam || {})
+    });
+  }catch(e){ return defaultState(); }
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+}
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const qById = id => QUESTIONS.find(q => q.id === id);
+const isRevealed = id => state.showResults || (state.mode === 'latihan' && !!state.checked[id]);
+
+function statusOf(id){
+  const a = state.answers[id];
+  if(a === undefined) return 'empty';
+  if(!isRevealed(id)) return 'answered';
+  return a === qById(id).kunci ? 'correct' : 'wrong';
+}
+
+function visibleIds(){
+  return QUESTIONS.filter(q => {
+    if(state.filter.topik !== 'all' && q.topik !== state.filter.topik) return false;
+    if(state.filter.bloom !== 'all' && q.bloom !== state.filter.bloom) return false;
+    if(state.filter.status !== 'all' && statusOf(q.id) !== state.filter.status) return false;
+    return true;
+  }).map(q => q.id);
+}
+
+function stats(){
+  let correct = 0, wrong = 0, answered = 0;
+  QUESTIONS.forEach(q => {
+    const a = state.answers[q.id];
+    if(a === undefined) return;
+    answered++;
+    if(a === q.kunci) correct++; else wrong++;
+  });
+  return { correct, wrong, answered, empty: TOTAL - answered };
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+function init(){
+  document.documentElement.setAttribute('data-theme', state.theme);
+  $('themeBtn').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+
+  buildFilters();
+  bindEvents();
+  if(!visibleIds().includes(state.index)){
+    const v = visibleIds();
+    state.index = v.length ? v[0] : QUESTIONS[0].id;
+  }
+  renderAll();
+  startTimer();
+}
+
+function buildFilters(){
+  const topikSel = $('fTopik');
+  const daftarTopik = [...new Set(QUESTIONS.map(q => q.topik))];
+  topikSel.innerHTML = `<option value="all">Semua topik</option>` +
+    daftarTopik.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+  topikSel.value = state.filter.topik;
+
+  const bloomSel = $('fBloom');
+  const daftarBloom = [...new Set(QUESTIONS.map(q => q.bloom))].sort();
+  bloomSel.innerHTML = `<option value="all">Semua level</option>` +
+    daftarBloom.map(b => `<option value="${b}">${b}</option>`).join('');
+  bloomSel.value = state.filter.bloom;
+
+  $('fStatus').value = state.filter.status;
+}
+
+function bindEvents(){
+  $('modeLatihan').onclick = () => setMode('latihan');
+  $('modeUjian').onclick = () => setMode('ujian');
+  $('themeBtn').onclick = toggleTheme;
+  $('resetBtn').onclick = resetAll;
+
+  $('fTopik').onchange = e => { state.filter.topik = e.target.value; afterFilter(); };
+  $('fBloom').onchange = e => { state.filter.bloom = e.target.value; afterFilter(); };
+  $('fStatus').onchange = e => { state.filter.status = e.target.value; afterFilter(); };
+
+  document.addEventListener('keydown', onKey);
+}
+
+function afterFilter(){
+  const v = visibleIds();
+  if(!v.includes(state.index) && v.length) state.index = v[0];
+  save(); renderAll();
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+function setMode(m){
+  if(state.mode === m) return;
+  state.mode = m;
+  state.showResults = false;
+  if(m === 'ujian' && !state.exam.startedAt){
+    state.exam.startedAt = Date.now();
+    state.exam.finishedAt = null;
+  }
+  save(); renderAll(); startTimer();
+}
+
+function toggleTheme(){
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', state.theme);
+  $('themeBtn').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+  save();
+}
+
+function resetAll(){
+  if(!confirm('Reset semua jawaban, pemeriksaan, dan hasil? Tindakan ini tidak bisa dibatalkan.')) return;
+  const theme = state.theme;
+  state = defaultState();
+  state.theme = theme;
+  save(); renderAll(); startTimer();
+}
+
+function pickOption(i){
+  const q = qById(state.index);
+  if(!q || i < 0 || i >= q.opsi.length) return;
+  if(state.showResults) return;
+  if(state.mode === 'latihan' && state.checked[q.id]) return;
+  state.answers[q.id] = i;
+  save(); renderAll();
+}
+
+function checkAnswer(){
+  const q = qById(state.index);
+  if(!q) return;
+  if(state.answers[q.id] === undefined){
+    flash('Pilih jawaban dulu sebelum mengecek.');
+    return;
+  }
+  state.checked[q.id] = true;
+  save(); renderAll();
+}
+
+function goTo(id){
+  state.index = id;
+  save(); renderAll();
+  const card = $('qcard');
+  if(card) card.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function goNext(){
+  const v = visibleIds();
+  const i = v.indexOf(state.index);
+  if(i >= 0 && i < v.length - 1) goTo(v[i+1]);
+}
+function goPrev(){
+  const v = visibleIds();
+  const i = v.indexOf(state.index);
+  if(i > 0) goTo(v[i-1]);
+}
+
+function finishExam(){
+  const s = stats();
+  const kosong = s.empty;
+  let msg = `Selesai & lihat hasil?\n\nTerjawab: ${s.answered}/${TOTAL}`;
+  if(kosong > 0) msg += `\nMasih kosong: ${kosong} soal`;
+  if(!confirm(msg)) return;
+  if(!state.exam.startedAt) state.exam.startedAt = Date.now();
+  state.exam.finishedAt = Date.now();
+  state.showResults = true;
+  save(); renderAll();
+  setTimeout(() => $('results').scrollIntoView({ behavior:'smooth', block:'start' }), 60);
+}
+
+function primaryAction(){
+  if(state.showResults) return;
+  if(state.mode === 'latihan'){
+    const q = qById(state.index);
+    if(q && !state.checked[q.id]) checkAnswer();
+    else goNext();
+  } else {
+    goNext();
+  }
+}
+
+function flash(text){
+  const box = document.createElement('div');
+  box.textContent = text;
+  box.style.cssText = 'position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--text);color:var(--card);padding:10px 18px;border-radius:10px;font-size:.86rem;font-weight:600;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,.18)';
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), 1800);
+}
+
+/* =========================================================
+   KEYBOARD
+   ========================================================= */
+function onKey(e){
+  if(e.target.matches('select, input, textarea')) return;
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key;
+  if(k === 'ArrowRight'){ e.preventDefault(); goNext(); }
+  else if(k === 'ArrowLeft'){ e.preventDefault(); goPrev(); }
+  else if(/^[1-5]$/.test(k)){ e.preventDefault(); pickOption(+k - 1); }
+  else if(/^[a-eA-E]$/.test(k)){ e.preventDefault(); pickOption(k.toUpperCase().charCodeAt(0) - 65); }
+  else if(k === 'Enter'){ e.preventDefault(); primaryAction(); }
+}
+
+/* =========================================================
+   TIMER
+   ========================================================= */
+let timerHandle = null;
+function startTimer(){
+  if(timerHandle) clearInterval(timerHandle);
+  updateTimer();
+  timerHandle = setInterval(updateTimer, 1000);
+}
+function elapsedMs(){
+  if(!state.exam.startedAt) return 0;
+  const end = state.exam.finishedAt || Date.now();
+  return Math.max(0, end - state.exam.startedAt);
+}
+function fmt(ms){
+  const t = Math.floor(ms / 1000);
+  const m = String(Math.floor(t / 60)).padStart(2,'0');
+  const s = String(t % 60).padStart(2,'0');
+  return `${m}:${s}`;
+}
+function updateTimer(){
+  const box = $('statTimer');
+  if(!box) return;
+  if(state.mode === 'ujian' && state.exam.startedAt){
+    box.textContent = fmt(elapsedMs());
+  } else {
+    box.textContent = '—';
+  }
+}
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+function renderAll(){
+  $('modeLatihan').classList.toggle('active', state.mode === 'latihan');
+  $('modeUjian').classList.toggle('active', state.mode === 'ujian');
+  renderStats();
+  renderQuestion();
+  renderActions();
+  renderNav();
+  renderResults();
+  renderFilterInfo();
+}
+
+function renderStats(){
+  const s = stats();
+  $('statAnswered').textContent = s.answered;
+  $('statCorrect').textContent = s.correct;
+  $('statWrong').textContent = s.wrong;
+  $('statScore').textContent = Math.round((s.correct / TOTAL) * 100);
+  $('progressFill').style.width = (s.answered / TOTAL * 100) + '%';
+  updateTimer();
+}
+
+function renderFilterInfo(){
+  const v = visibleIds();
+  $('filterInfo').textContent = v.length === TOTAL
+    ? `Menampilkan semua ${TOTAL} soal`
+    : `Menampilkan ${v.length} dari ${TOTAL} soal`;
+}
+
+function renderQuestion(){
+  const q = qById(state.index);
+  const card = $('qcard');
+  if(!q){ card.innerHTML = ''; return; }
+
+  const revealed = isRevealed(q.id);
+  const chosen = state.answers[q.id];
+  const isCorrect = chosen === q.kunci;
+
+  const optsHTML = q.opsi.map((text, i) => {
+    let cls = 'opt';
+    if(revealed){
+      if(i === q.kunci) cls += ' correct';
+      else if(i === chosen) cls += ' wrong';
+    } else if(i === chosen){
+      cls += ' selected';
+    }
+    const disabled = revealed || state.showResults ? 'disabled' : '';
+    return `<button class="${cls}" data-opt="${i}" ${disabled}>
+              <span class="letter">${LETTERS[i]}</span>
+              <span class="otext">${esc(text)}</span>
+            </button>`;
+  }).join('');
+
+  const kodeHTML = q.kode ? `<pre class="code">${esc(q.kode)}</pre>` : '';
+
+  let feedbackHTML = '';
+  if(revealed){
+    feedbackHTML = `
+      <div class="feedback">
+        <div class="verdict ${isCorrect ? 'ok' : 'err'}">
+          ${isCorrect ? '✓ Jawaban benar' : (chosen === undefined ? '○ Tidak dijawab' : '✕ Jawaban kurang tepat')}
+        </div>
+        <div class="fbrow">
+          <b>Kunci Jawaban</b>
+          <span class="val"><strong>${LETTERS[q.kunci]}.</strong> ${esc(q.opsi[q.kunci])}</span>
+        </div>
+        <div class="fbrow">
+          <b>Pembahasan</b>
+          <span class="val">${esc(q.pembahasan)}</span>
+        </div>
+        <div class="fbrow">
+          <b>Referensi</b>
+          <span class="reftag">${esc(q.ref)}</span>
+        </div>
+        <div class="fbrow">
+          <b>Tujuan Pembelajaran</b>
+          <span class="val">${esc(q.tujuan)}</span>
+        </div>
+      </div>`;
+  }
+
+  card.innerHTML = `
+    <div class="qmeta">
+      <span class="chip">${esc(q.topik)}</span>
+      <span class="chip bloom">Bloom ${q.bloom}</span>
+      <span class="chip num">Soal ${q.id} dari ${TOTAL}</span>
+    </div>
+    <p class="qtext">${esc(q.soal)}</p>
+    ${kodeHTML}
+    <div class="options" role="group" aria-label="Pilihan jawaban">${optsHTML}</div>
+    ${feedbackHTML}
+  `;
+
+  card.querySelectorAll('.opt').forEach(btn => {
+    btn.addEventListener('click', () => pickOption(+btn.dataset.opt));
+  });
+}
+
+function renderActions(){
+  const q = qById(state.index);
+  const v = visibleIds();
+  const pos = v.indexOf(state.index);
+  const atStart = pos <= 0;
+  const atEnd = pos === v.length - 1;
+
+  let html = `
+    <button class="btn" id="prevBtn" ${atStart ? 'disabled' : ''}>← Sebelumnya</button>
+  `;
+
+  if(state.mode === 'latihan' && !state.showResults){
+    const done = q && state.checked[q.id];
+    html += `<button class="btn primary" id="checkBtn" ${done ? 'disabled' : ''}>
+               ${done ? '✓ Sudah dicek' : 'Cek Jawaban'}
+             </button>`;
+  }
+
+  html += `<button class="btn" id="nextBtn" ${atEnd ? 'disabled' : ''}>Berikutnya →</button>`;
+  html += `<span class="spacer"></span>`;
+
+  if(state.mode === 'ujian' && !state.showResults){
+    html += `<button class="btn ok" id="finishBtn">Selesai &amp; Lihat Hasil</button>`;
+  }
+  if(state.showResults){
+    html += `<button class="btn ghost" id="hideResultsBtn">Sembunyikan Hasil</button>`;
+  }
+
+  $('actions').innerHTML = html;
+
+  const prev = $('prevBtn'), next = $('nextBtn');
+  if(prev) prev.onclick = goPrev;
+  if(next) next.onclick = goNext;
+  const c = $('checkBtn'); if(c) c.onclick = checkAnswer;
+  const f = $('finishBtn'); if(f) f.onclick = finishExam;
+  const h = $('hideResultsBtn');
+  if(h) h.onclick = () => { state.showResults = false; save(); renderAll(); };
+}
+
+function renderNav(){
+  const v = new Set(visibleIds());
+  const grid = $('navgrid');
+  grid.innerHTML = QUESTIONS.map(q => {
+    const st = statusOf(q.id);
+    const classes = ['navbtn'];
+    if(st !== 'empty') classes.push(st);
+    if(q.id === state.index) classes.push('current');
+    if(!v.has(q.id)) classes.push('dim');
+    const disabled = !v.has(q.id) ? 'disabled' : '';
+    return `<button class="${classes.join(' ')}" data-id="${q.id}" ${disabled}
+              title="Soal ${q.id} · ${q.bloom}" aria-label="Soal ${q.id}">${q.id}</button>`;
+  }).join('');
+
+  grid.querySelectorAll('button[data-id]').forEach(b => {
+    b.onclick = () => goTo(+b.dataset.id);
+  });
+}
+
+function renderResults(){
+  const box = $('results');
+  if(!state.showResults){ box.classList.add('hidden'); box.innerHTML = ''; return; }
+  box.classList.remove('hidden');
+
+  const s = stats();
+  const score = Math.round((s.correct / TOTAL) * 100);
+  const waktu = state.exam.startedAt ? fmt(elapsedMs()) : '—';
+
+  // rekap per topik
+  const perTopik = {};
+  QUESTIONS.forEach(q => {
+    if(!perTopik[q.topik]) perTopik[q.topik] = { total:0, benar:0, salah:0, kosong:0 };
+    const o = perTopik[q.topik];
+    o.total++;
+    const a = state.answers[q.id];
+    if(a === undefined) o.kosong++;
+    else if(a === q.kunci) o.benar++;
+    else o.salah++;
+  });
+  const topikRows = Object.entries(perTopik).map(([nama, o]) => `
+    <tr>
+      <td>${esc(nama)}</td>
+      <td class="num">${o.benar}/${o.total}</td>
+      <td class="num">${Math.round(o.benar / o.total * 100)}%</td>
+    </tr>`).join('');
+
+  // rekap per bloom
+  const perBloom = {};
+  QUESTIONS.forEach(q => {
+    if(!perBloom[q.bloom]) perBloom[q.bloom] = { total:0, benar:0 };
+    perBloom[q.bloom].total++;
+    if(state.answers[q.id] === q.kunci) perBloom[q.bloom].benar++;
+  });
+  const bloomRows = Object.keys(perBloom).sort().map(b => `
+    <tr>
+      <td>${b}</td>
+      <td class="num">${perBloom[b].benar}/${perBloom[b].total}</td>
+      <td class="num">${Math.round(perBloom[b].benar / perBloom[b].total * 100)}%</td>
+    </tr>`).join('');
+
+  // daftar salah / kosong
+  const salahList = QUESTIONS.filter(q => state.answers[q.id] !== q.kunci);
+  const salahHTML = salahList.length === 0
+    ? `<p class="empty-note">Tidak ada jawaban yang salah. Bagus!</p>`
+    : salahList.map(q => {
+        const a = state.answers[q.id];
+        const jawabmu = a === undefined ? `<em>tidak dijawab</em>` : `${LETTERS[a]}. ${esc(q.opsi[a])}`;
+        return `<details class="wrongitem">
+          <summary>Soal ${q.id} — ${esc(q.topik)} (Bloom ${q.bloom})</summary>
+          <div class="wrongbody">
+            <div class="fbrow"><b>Soal</b><span class="val">${esc(q.soal)}</span></div>
+            <div class="fbrow"><b>Jawabanmu</b><span class="val">${jawabmu}</span></div>
+            <div class="fbrow"><b>Kunci</b><span class="val"><strong>${LETTERS[q.kunci]}.</strong> ${esc(q.opsi[q.kunci])}</span></div>
+            <div class="fbrow"><b>Pembahasan</b><span class="val">${esc(q.pembahasan)}</span></div>
+            <div class="fbrow"><b>Referensi</b><span class="reftag">${esc(q.ref)}</span></div>
+          </div>
+        </details>`;
+      }).join('');
+
+  box.innerHTML = `
+    <h2>Hasil Pengerjaan</h2>
+    <div class="bigscore">${score}<span>/100</span></div>
+    <p class="ressum">
+      Benar <strong>${s.correct}</strong> · Salah <strong>${s.wrong}</strong> ·
+      Kosong <strong>${s.empty}</strong> · Terjawab <strong>${s.answered}</strong>/${TOTAL} ·
+      Waktu <strong>${waktu}</strong>
+    </p>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Rekap per Topik</h3>
+        <table>
+          <thead><tr><th>Topik</th><th class="num">Benar</th><th class="num">%</th></tr></thead>
+          <tbody>${topikRows}</tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h3>Rekap per Level Bloom</h3>
+        <table>
+          <thead><tr><th>Level</th><th class="num">Benar</th><th class="num">%</th></tr></thead>
+          <tbody>${bloomRows}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:16px">
+      <h3>Soal yang Perlu Diulang (${salahList.length})</h3>
+      ${salahHTML}
+    </div>
+
+    <div class="actions" style="margin-top:0">
+      <button class="btn primary" id="retryWrongBtn" ${salahList.length === 0 ? 'disabled' : ''}>
+        Ulangi soal yang salah
+      </button>
+      <button class="btn" id="fullResetBtn">Reset &amp; mulai dari awal</button>
+    </div>
+  `;
+
+  const retry = $('retryWrongBtn');
+  if(retry) retry.onclick = () => {
+    const ids = QUESTIONS.filter(q => state.answers[q.id] !== q.kunci).map(q => q.id);
+    if(!ids.length) return;
+    ids.forEach(id => { delete state.answers[id]; delete state.checked[id]; });
+    state.showResults = false;
+    state.mode = 'latihan';
+    state.filter = { topik:'all', bloom:'all', status:'belum' };
+    state.filter.status = 'empty';
+    $('fStatus').value = 'empty';
+    $('fTopik').value = 'all';
+    $('fBloom').value = 'all';
+    state.index = ids[0];
+    save(); renderAll();
+    goTo(ids[0]);
+  };
+
+  const full = $('fullResetBtn');
+  if(full) full.onclick = () => {
+    if(!confirm('Reset semua jawaban dan mulai dari awal?')) return;
+    const theme = state.theme;
+    state = defaultState();
+    state.theme = theme;
+    $('fTopik').value = 'all';
+    $('fBloom').value = 'all';
+    $('fStatus').value = 'all';
+    save(); renderAll();
+    window.scrollTo({ top:0, behavior:'smooth' });
+  };
+}
+
+/* ---------- Go ---------- */
+init();
+</script>
+</body>
+</html>
